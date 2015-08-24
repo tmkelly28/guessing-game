@@ -1,4 +1,3 @@
-//  ToDo: If submitGuessInput has focus, Enter should submit
 //  ToDo: Another animation for victory/failure
 
 // alerts dictionary - contains a dictionary of alert values for building new alerts
@@ -13,7 +12,6 @@ var game;
 
 // Alert object constructor & helper function
 function Alert(type, exclaim, body, guess, hint) {
-  "use strict";
   this.type = type;
   this.exclaim = exclaim;
   this.body = body;
@@ -21,7 +19,6 @@ function Alert(type, exclaim, body, guess, hint) {
   this.hint = hint;
 }
 Alert.prototype.drawSelf = function () {
-  "use strict";
   var divEl = document.createElement("div"),
     strongEl = document.createElement("strong"),
     exclaim = document.createTextNode(this.exclaim),
@@ -37,21 +34,18 @@ Alert.prototype.drawSelf = function () {
   $("#alerts").prepend(divEl);
 };
 function createAlertObject(v, w, x, y, z) {
-  "use strict";
   var newAlert = new Alert(alerts.type[v], alerts.exclaim[w], alerts.body[x], y, alerts.hint[z]);
   newAlert.drawSelf();
 }
 
 // Game object constructor
 function Game(totalGuesses) {
-  "use strict";
   this.target = Math.floor((Math.random() * 100) + 1);
   this.lastGuess = null;
   this.pastGuesses = [];
   this.totalGuesses = totalGuesses;
 }
 Game.prototype.makeGuess = function (guess) {
-  "use strict";
   this.totalGuesses -= 1;
   if (guess === this.target) {
     // victory
@@ -84,7 +78,6 @@ Game.prototype.makeGuess = function (guess) {
   $("#submit-guess-input").val("");
 };
 Game.prototype.giveHint = function (guess) {
-  "use strict";
   if (guess > this.target) {
     return 2;
   } else {
@@ -94,61 +87,63 @@ Game.prototype.giveHint = function (guess) {
 
 // Creating a new game
 function startNewGame(defaultGuesses) {
-  "use strict";
   game = new Game(defaultGuesses);
   $("#alerts").html("");
   $("#guesses-remaining").html(game.totalGuesses);
   $("#submit-guess-input").removeAttr("disabled");
 }
 
+// Validate a guess
+function validateGuess() {
+  var guess = Number($("#submit-guess-input").val());
+  if ($("#submit-guess-input").attr("disabled")) {
+    // case when new game hasn't been started
+    createAlertObject(2, 0, 12, "", 0);
+  } else if (isNaN(guess)) {
+    // case when guess is not a number
+    createAlertObject(2, 4, 6, "", 0);
+  } else if (guess % 1 !== 0) {
+    //case when guess is not a whole number
+    createAlertObject(2, 4, 6, "", 0);
+  } else if (guess < 1 || guess > 100) {
+    // case when guess is less than 1 or greater than 100
+    createAlertObject(2, 4, 7, "", 0);
+  } else if (game.pastGuesses.indexOf(guess) !== -1) {
+    // case when guess has already been guessed
+    createAlertObject(2, 4, 8, guess, 0);
+  } else {
+    // case when guess is valid
+    game.currentGuess = guess;
+    game.makeGuess(game.currentGuess);
+    game.pastGuesses.push(guess);
+  }
+}
+
 // DOM Events
 $(document).ready(function () {
   // Selecting difficulty
   $("#difficulty-easy").click(function () {
-  "use strict";
   startNewGame(14);
   });
   $("#difficulty-medium").click(function () {
-    "use strict";
     startNewGame(7);
   });
   $("#difficulty-hard").click(function () {
-    "use strict";
     startNewGame(2);
   });
-  // Alert animation
-  $(".make-alerts").click(function () {
-    $($("#alerts").children("div")[0]).hide().slideDown();
-  });
-  // Validating a guess
+  // Use guess button to validate a guess
   $("#submit-guess-button").click(function () {
-    "use strict";
-    var guess = Number($("#submit-guess-input").val());
-    if ($("#submit-guess-input").attr("disabled")) {
-      // case when new game hasn't been started
-      createAlertObject(2, 0, 12, "", 0);
-    } else if (isNaN(guess)) {
-      // case when guess is not a number
-      createAlertObject(2, 4, 6, "", 0);
-    } else if (guess % 1 !== 0) {
-      //case when guess is not a whole number
-      createAlertObject(2, 4, 6, "", 0);
-    } else if (guess < 1 || guess > 100) {
-      // case when guess is less than 1 or greater than 100
-      createAlertObject(2, 4, 7, "", 0);
-    } else if (game.pastGuesses.indexOf(guess) !== -1) {
-      // case when guess has already been guessed
-      createAlertObject(2, 4, 8, guess, 0);
-    } else {
-      // case when guess is valid
-      game.currentGuess = guess;
-      game.makeGuess(game.currentGuess);
-      game.pastGuesses.push(guess);
+    validateGuess();
+  });
+  // Use Enter to validate a guess
+  $(document).keypress(function(event) {
+    if (event.which === 13) {
+      validateGuess();
+      $($("#alerts").children("div")[0]).hide().slideDown();
     }
   });
   // Getting a hint
-  $("#hint-button").click( function () {
-    "use strict";
+  $("#hint-button").click(function () {
     if ($("#submit-guess-input").attr("disabled")) {
       // if no game in progress, the hint is to start a new game :)
       createAlertObject(2, 0, 12, "", 0);
@@ -156,5 +151,9 @@ $(document).ready(function () {
       // create a alert with a hint
       createAlertObject(2, 7, 11, game.target, 0);
     }
+  });
+  // Alert animation
+  $(".make-alerts").click(function () {
+    $($("#alerts").children("div")[0]).hide().slideDown();
   });
 });
