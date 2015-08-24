@@ -1,5 +1,3 @@
-//  ToDo: Another animation for victory/failure
-
 // alerts dictionary - contains a dictionary of alert values for building new alerts
 var alerts = {
     type: ["alert alert-success", "alert alert-info", "alert alert-warning", "alert alert-danger"],
@@ -44,6 +42,7 @@ function Game(totalGuesses) {
   this.lastGuess = null;
   this.pastGuesses = [];
   this.totalGuesses = totalGuesses;
+  this.gameOver = false;
 }
 Game.prototype.makeGuess = function (guess) {
   this.totalGuesses -= 1;
@@ -51,11 +50,13 @@ Game.prototype.makeGuess = function (guess) {
     // victory
     createAlertObject(0, 1, 1, guess, 0);
     $("#submit-guess-input").attr("disabled", "");
+    game.gameOver = true;
   } else if (this.totalGuesses === 0) {
     // defeat
     createAlertObject(3, 5, 5, this.target, 0);
     $("#submit-guess-input").attr("disabled", "");
     $("#guesses-remaining").html("--");
+    game.gameOver = true;
   } else if (this.totalGuesses === 1) {
     // warning one guess left!
     createAlertObject(3, 4, 4, guess, this.giveHint(guess));
@@ -152,8 +153,19 @@ $(document).ready(function () {
       createAlertObject(2, 7, 11, game.target, 0);
     }
   });
-  // Alert animation
+  // Alert animations
   $(".make-alerts").click(function () {
+    // alert slidedown
     $($("#alerts").children("div")[0]).hide().slideDown();
+    if (game.gameOver) {
+      // special animation at game over
+      $($("#alerts").children("div")[0]).animate({
+        fontSize: "15"
+      }, 1000);
+      $($("#alerts").children("div")[0]).animate({
+        fontSize: "1em"
+      }, 1000);
+      console.log("happened");
+    }
   });
 });
