@@ -149,6 +149,15 @@ $(document).ready(function () {
     if (event.which === 13) {
       validateGuess();
       $($("#alerts").children("div")[0]).hide().slideDown();
+      if (game.gameOver) {
+        // special animation at game over
+        $($("#alerts").children("div")[0]).animate({
+          fontSize: "15"
+        }, 1000);
+        $($("#alerts").children("div")[0]).animate({
+          fontSize: "1em"
+        }, 1000);
+      }
     }
   });
   // Getting a hint
