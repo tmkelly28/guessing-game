@@ -7,3 +7,33 @@
   margin-left: 10%;
   margin-right: 10%;
 }
+
+.achievement {
+  position: absolute;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+#achievements {
+  position: absolute;
+  height: 35%;
+  width: 35%;
+  right: 0;
+  top: 0;
+}
+
+#difficulty-practice {
+  display: none;
+}
+
+#difficulty-jedi {
+  display: none;
+}
+
+.dropdown {
+  display: inline-block;
+}
+
+#time-trial-button {
+  display: none;
+}

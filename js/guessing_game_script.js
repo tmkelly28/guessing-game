@@ -1,12 +1,20 @@
 // alerts dictionary - contains a dictionary of alert values for building new alerts
 var alerts = {
-    type: ["alert alert-success", "alert alert-info", "alert alert-warning", "alert alert-danger"],
-    exclaim: ["", "Yes! ", "Brr! ", "Yow! ", "Uh oh! ", "Oh noes! ", "Good guess! ", "You could "],
-    body: ["", "You got it! It was: ", "Getting colder! Try again! You guessed: ", "Getting hotter! Take another guess! You guessed: ", "You've got one guess left! You guessed: ", "You're out of guesses! The answer was: ", "That's not valid - try guessing a whole number!", "Try guessing between 1 and 100!", "You already guessed ", "Here's a hint: the answer is higher than your guess of ", "Here's a hint: the answer is lower than your guess of ", "try guessing ", "Try starting a new game!"],
-    hint: ["", " (Guess higher next time!)", " (Guess lower next time!)"]
+  type: ["alert alert-success", "alert alert-info", "alert alert-warning", "alert alert-danger"],
+  exclaim: ["", "Yes! ", "Brr! ", "Yow! ", "Uh oh! ", "Oh noes! ", "Good guess! ", "You could "],
+  body: ["", "You got it! It was: ", "Getting colder! Try again! You guessed: ", "Getting hotter! Take another guess! You guessed: ", "You've got one guess left! You guessed: ", "You're out of guesses! The answer was: ", "That's not valid - try guessing a whole number!", "Try guessing between 1 and 100!", "You already guessed ", "Here's a hint: the answer is higher than your guess of ", "Here's a hint: the answer is lower than your guess of ", "try guessing ", "Try starting a new game!"],
+  hint: ["", " (Guess higher next time!)", " (Guess lower next time!)"]
   };
 // game global - holds a Game object
 var game;
+// player global - holds a Player object
+var player;
+// achievements dictionary - contains a dictionary of achievements
+var achievements = {
+  type: ["alert alert-success achievement", "alert alert-info achievement", "alert alert-warning achievement", "alert alert-danger achievement"],
+  title: ["", "First Fail", "First Win", "Failsafe", "So Be It...Jedi", "Time Travails", "Super Star"],
+  description: ["", "There's a first time for everything! Keep trying!", "Alright! Congratulations on your first victory!", "Whoa, buddy! That's five fails! You've unlocked the Practice Mode difficulty - keep at it!", "I've got a bad feeling about this...you got the answer in one guess! You've unlocked the Jedi Knight difficulty!", "That's five victories! You now have access to Time Trial mode!", "Yow - that's ten victories! Great job!"]
+}
 
 // Alert object constructor & helper function
 function Alert(type, exclaim, body, guess, hint) {
@@ -165,7 +173,63 @@ $(document).ready(function () {
       $($("#alerts").children("div")[0]).animate({
         fontSize: "1em"
       }, 1000);
-      console.log("happened");
     }
   });
 });
+
+// Player constructor
+function Player(wins, losses, achievements) {
+  this.wins = wins;
+  this.losses = losses;
+  this.achievements = achievements;
+}
+Player.prototype.incrementWins = function () {
+  this.wins += 1;
+};
+Player.prototype.incrementLosses = function () {
+  this.losses += 1;
+};
+Player.prototype.earnAchievement = function (achievement) {
+  this.achievements.push(achievement);
+};
+
+// Achievement constructor
+function Achievement(type, title, description) {
+  this.type = type;
+  this.title = title;
+  this.description = description;
+}
+Achievement.prototype.drawSelf = function () {
+  $("#achievements").html("");
+  var divEl = document.createElement("div"),
+      spanEl = document.createElement("span"),
+    strongEl = document.createElement("strong"),
+    header = document.createTextNode("   Achievement Unlocked: "),
+    brEl = document.createElement("br"),
+    emEl = document.createElement("em"),
+    title = document.createTextNode(this.title),
+    description = document.createTextNode(this.description);
+  divEl.className = this.type;
+  spanEl.className = "glyphicon glyphicon-ok-sign";
+  divEl.appendChild(spanEl);
+  divEl.appendChild(header);
+  strongEl.appendChild(title);
+  divEl.appendChild(strongEl);
+  divEl.appendChild(brEl);
+  emEl.appendChild(description);
+  divEl.appendChild(emEl);
+  $("#achievements").prepend(divEl);
+  $(".achievement").hide().slideDown(1000).fadeOut(5000);
+};
+function addNewAchievement(x, y, z) {
+  var newAchievement = new Achievement(achievements.type[x], achievements.title[y], achievements.description[y]);
+  player.earnAchievement(newAchievement.title);
+  newAchievement.drawSelf();
+}
+
+// Validate game end and achievements earned
+function validateGameEnd() {
+  console.log("meh");
+}
+
+player = new Player(0, 0, []);
