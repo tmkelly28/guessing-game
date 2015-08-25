@@ -92,8 +92,18 @@ function validateLogin(usr, pwd) {
 
 // Set up the player
 function setUpPlayer(usrInfo) {
-  console.log(usrInfo);
-  player = new Player(usrInfo[0], usrInfo[1], usrInfo[2], usrInfo[3], usrInfo[4])
+  player = new Player(usrInfo[0], usrInfo[1], usrInfo[2], usrInfo[3], usrInfo[4]);
+  $("#username-current").html(player.usrname);
+  $("#achievements-earned-button").css("display", "inline-block");
+  if (player.achievements.indexOf("Time Travails")) {
+    $("#time-trial-button").css("display", "inline-block");
+  }
+  if (player.achievements.indexOf("Failsafe")) {
+    $("#difficulty-practice").css("display", "inline-block");
+  }
+  if (player.achievements.indexOf("So Be It...Jedi")) {
+    $("#difficulty-jedi").css("display", "inline-block");
+  }
 }
 
 // store user data when the page is closed
