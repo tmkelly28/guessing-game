@@ -59,12 +59,16 @@ Game.prototype.makeGuess = function (guess) {
     createAlertObject(0, 1, 1, guess, 0);
     $("#submit-guess-input").attr("disabled", "");
     game.gameOver = true;
+    player.incrementWins();
+    validateGameEnd();
   } else if (this.totalGuesses === 0) {
     // defeat
     createAlertObject(3, 5, 5, this.target, 0);
     $("#submit-guess-input").attr("disabled", "");
     $("#guesses-remaining").html("--");
     game.gameOver = true;
+    player.incrementLosses();
+    validateGameEnd();
   } else if (this.totalGuesses === 1) {
     // warning one guess left!
     createAlertObject(3, 4, 4, guess, this.giveHint(guess));
@@ -100,6 +104,7 @@ function startNewGame(defaultGuesses) {
   $("#alerts").html("");
   $("#guesses-remaining").html(game.totalGuesses);
   $("#submit-guess-input").removeAttr("disabled");
+  $("#achievements-earned-button").fadeOut();
 }
 
 // Validate a guess
@@ -184,6 +189,15 @@ $(document).ready(function () {
       }, 1000);
     }
   });
+  // Use Achievements Earned button
+  $("#achievements-earned-button").click(function () {
+    $("#alerts").html("");
+    for (i = 0; i < player.achievements.length; i++) {
+      var newAlert = new Alert(alerts.type[0], alerts.exclaim[0], player.achievements[i], "", alerts.hint[0]);
+      newAlert.drawSelf();
+      $("#alerts").children("div").hide().fadeIn();
+    }
+  });
 });
 
 // Player constructor
@@ -200,6 +214,14 @@ Player.prototype.incrementLosses = function () {
 };
 Player.prototype.earnAchievement = function (achievement) {
   this.achievements.push(achievement);
+};
+Player.prototype.hasAchievement = function (achievement) {
+  for (i = 0; i < this.achievements.length; i++ ) {
+    if (this.achievements[i] === achievement) {
+      return true;
+    }
+  }
+  return false;
 };
 
 // Achievement constructor
@@ -238,7 +260,29 @@ function addNewAchievement(x, y, z) {
 
 // Validate game end and achievements earned
 function validateGameEnd() {
-  console.log("meh");
+  if (player.wins >= 1 && game.pastGuesses.length === 0 && !(player.hasAchievement("So Be It...Jedi"))) {
+  // win on first guess, unlock Jedi Knight difficulty
+    $("#difficulty-jedi").css("display", "inline-block");
+    addNewAchievement(0, 4, 4);
+  } else if (player.wins >= 1 && !(player.hasAchievement("First Win"))) {
+  // first win
+    addNewAchievement(0, 2, 2);
+  } else if (player.losses === 1 && !(player.hasAchievement("First Fail"))) {
+  // first loss
+    addNewAchievement(0, 1, 1);
+  } else if (player.losses === 5 && !(player.hasAchievement("Failsafe"))) {
+  // five losses, unlock Practice Mode difficulty
+    $("#difficulty-practice").css("display", "inline-block");
+    addNewAchievement(0, 3, 3);
+  } else if (player.wins === 5 && !(player.hasAchievement("Time Travails"))) {
+  // five wins, unlock Time Trial difficulty
+    $("#time-trial-button").css("display", "inline-block");
+    addNewAchievement(0, 5, 5);
+  } else if (player.wins === 10 && !(player.hasAchievement("Super Star"))) {
+  // ten wins
+    addNewAchievement(0, 6, 6);
+  }
+  $("#achievements-earned-button").css("display", "inline-block");
 }
 
 player = new Player(0, 0, []);

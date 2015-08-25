@@ -19,7 +19,7 @@
   height: 35%;
   width: 35%;
   right: 0;
-  top: 0;
+  top: 1%;
 }
 
 #difficulty-practice {
@@ -35,5 +35,9 @@
 }
 
 #time-trial-button {
+  display: none;
+}
+
+#achievements-earned-button {
   display: none;
 }
