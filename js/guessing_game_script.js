@@ -198,6 +198,7 @@ function validateGuess() {
 
 // Validate game end and achievements earned
 function validateGameEnd() {
+  calculateWinLoss();
   if (player.wins >= 1 && game.pastGuesses.length === 0 && !(player.hasAchievement("So Be It...Jedi"))) {
   // win on first guess, unlock Jedi Knight difficulty
     $("#difficulty-jedi").css("display", "inline-block");

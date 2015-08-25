@@ -95,15 +95,28 @@ function setUpPlayer(usrInfo) {
   player = new Player(usrInfo[0], usrInfo[1], usrInfo[2], usrInfo[3], usrInfo[4]);
   $("#username-current").html(player.usrname);
   $("#achievements-earned-button").css("display", "inline-block");
-  if (player.achievements.indexOf("Time Travails")) {
+  if (player.achievements.indexOf("Time Travails") >= 0) {
     $("#time-trial-button").css("display", "inline-block");
+  } else {
+    $("#time-trial-button").css("display", "none");
   }
-  if (player.achievements.indexOf("Failsafe")) {
+  if (player.achievements.indexOf("Failsafe") >= 0) {
     $("#difficulty-practice").css("display", "inline-block");
+  } else {
+    $("#difficulty-practice").css("display", "none");
   }
-  if (player.achievements.indexOf("So Be It...Jedi")) {
+  if (player.achievements.indexOf("So Be It...Jedi") >= 0) {
     $("#difficulty-jedi").css("display", "inline-block");
+  } else {
+    $("#difficulty-jedi").css("display", "none");
   }
+  calculateWinLoss();
+}
+
+// Set wins and losses in the navbar
+function calculateWinLoss() {
+  $("#win-count").html(player.wins);
+  $("#loss-count").html(player.losses);
 }
 
 // store user data when the page is closed
