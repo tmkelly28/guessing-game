@@ -41,3 +41,8 @@
 #achievements-earned-button {
   display: none;
 }
+
+.login-error {
+  color: firebrick;
+  text-align: center;
+}

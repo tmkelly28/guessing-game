@@ -102,7 +102,9 @@ Game.prototype.giveHint = function (guess) {
 };
 
 // Player constructor
-function Player(wins, losses, achievements) {
+function Player(usrname, pwd, wins, losses, achievements) {
+  this.usrname = usrname;
+  this.pwd = pwd;
   this.wins = wins;
   this.losses = losses;
   this.achievements = achievements;
@@ -309,5 +311,5 @@ $(document).ready(function () {
   });
 });
 
-// Instantiate a new player
-player = new Player(0, 0, []);
+// Instantiate default player
+player = new Player(undefined, undefined, 0, 0, []);
