@@ -9,41 +9,38 @@
   <link rel="stylesheet" href="css/guessing_game_style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
 </head>
-    
 <body>
-  
   <!-- Jumbotron and New Game Button -->
   <div class="jumbotron">
     <div class="container">
       <h1>I'm thinking of a number between 1 and 100...</h1>
+      <!-- Difficulty Dropdown -->
       <div class="dropdown">
-  <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">New Game
-  <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <li class="dropdown-header">Select difficulty</li>
-    <li><a href="#" id="difficulty-practice">Practice Mode</a></li>
-    <li><a href="#" id="difficulty-easy">Normal Human</a></li>
-    <li><a href="#" id="difficulty-medium">Computer Scientist</a></li>
-    <li><a href="#" id="difficulty-hard">Psychic Alien</a></li>
-    <li><a href="#" id="difficulty-jedi">Jedi Knight</a></li>
-  </ul>
+        <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">New Game<span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header">Select difficulty</li>
+            <li><a href="#" id="difficulty-practice">Practice Mode</a></li>
+            <li><a href="#" id="difficulty-easy">Normal Human</a></li>
+            <li><a href="#" id="difficulty-medium">Computer Scientist</a></li>
+            <li><a href="#" id="difficulty-hard">Psychic Alien</a></li>
+            <li><a href="#" id="difficulty-jedi">Jedi Knight</a></li>
+          </ul>
       </div>
+      <!-- Time Trial Button -->
       <button class="btn btn-info" type="button" id="time-trial-button">Time Trial</button>
+      <!-- Achievements Earned Button -->
       <button class="btn btn-info" type="button" id="achievements-earned-button">View Achievements</button>
     </div>
-    <div id="achievements">
-    </div>
+    <div id="achievements"></div>
   </div>
-  
   <!-- Submission Form and Remaining Guess Display -->
   <div class="container">
     <div class="col-md-8">
       <form class="form-horizontal" role="form" id="guess-form">
         <div class="form-group">
-        <label>Your guess:</label>
-        <input type="text" class="form-control" id="submit-guess-input" disabled>
+          <label>Your guess:</label>
+          <input type="text" class="form-control" id="submit-guess-input" disabled>
         </div>
         <div class="form-group">
           <a href="#" class="btn btn-primary make-alerts" role="button" id="submit-guess-button">Guess</a>
@@ -55,7 +52,6 @@
       <h1 id="guesses-left">Guesses Left: <span id="guesses-remaining">--</span></h1>
     </div>
   </div>
-  
   <!-- Alerts Display -->
   <div class="well well-lg" id="alerts">
     <div class="alert alert-warning">
@@ -76,11 +72,16 @@
         </ul>
       </div>
       <div class="text-muted">
-        Icons made by <a href="http://www.flaticon.com/authors/elegant-themes" title="Elegant Themes">Elegant Themes</a>, <a href="http://www.flaticon.com/authors/icomoon" title="Icomoon">Icomoon</a>, <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a>, <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>             is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
+        Icons made by 
+        <a href="http://www.flaticon.com/authors/elegant-themes" title="Elegant Themes">Elegant Themes</a>, 
+        <a href="http://www.flaticon.com/authors/icomoon" title="Icomoon">Icomoon</a>, 
+        <a href="http://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a>, 
+        <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> from 
+        <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by 
+        <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
       </div>
     </div>
   </footer>
-  
 </body>
   <script src="js/guessing_game_script.js"></script>
 </html>

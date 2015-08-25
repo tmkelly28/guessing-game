@@ -101,6 +101,64 @@ Game.prototype.giveHint = function (guess) {
   }
 };
 
+// Player constructor
+function Player(wins, losses, achievements) {
+  this.wins = wins;
+  this.losses = losses;
+  this.achievements = achievements;
+}
+Player.prototype.incrementWins = function () {
+  this.wins += 1;
+};
+Player.prototype.incrementLosses = function () {
+  this.losses += 1;
+};
+Player.prototype.earnAchievement = function (achievement) {
+  this.achievements.push(achievement);
+};
+Player.prototype.hasAchievement = function (achievement) {
+  for (i = 0; i < this.achievements.length; i++ ) {
+    if (this.achievements[i] === achievement) {
+      return true;
+    }
+  }
+  return false;
+};
+
+// Achievement constructor
+function Achievement(type, title, description) {
+  this.type = type;
+  this.title = title;
+  this.description = description;
+}
+Achievement.prototype.drawSelf = function () {
+  $("#achievements").html("");
+  var divEl = document.createElement("div"),
+      spanEl = document.createElement("span"),
+    strongEl = document.createElement("strong"),
+    header = document.createTextNode("   Achievement Unlocked: "),
+    brEl = document.createElement("br"),
+    emEl = document.createElement("em"),
+    title = document.createTextNode(this.title),
+    description = document.createTextNode(this.description);
+  divEl.className = this.type;
+  spanEl.className = "glyphicon glyphicon-ok-sign";
+  divEl.appendChild(spanEl);
+  divEl.appendChild(header);
+  strongEl.appendChild(title);
+  divEl.appendChild(strongEl);
+  divEl.appendChild(brEl);
+  emEl.appendChild(description);
+  divEl.appendChild(emEl);
+  $("#achievements").prepend(divEl);
+  $(".achievement").hide().slideDown(1000).fadeOut(5000);
+};
+function addNewAchievement(x, y, z) {
+  var newAchievement = new Achievement(achievements.type[x], achievements.title[y], achievements.description[y]);
+  player.earnAchievement(newAchievement.title);
+  newAchievement.drawSelf();
+}
+
 // Creating a new game
 function startNewGame(defaultGuesses) {
   game = new Game(defaultGuesses);
@@ -133,6 +191,41 @@ function validateGuess() {
     game.currentGuess = guess;
     game.makeGuess(game.currentGuess);
     game.pastGuesses.push(guess);
+  }
+}
+
+// Validate game end and achievements earned
+function validateGameEnd() {
+  if (player.wins >= 1 && game.pastGuesses.length === 0 && !(player.hasAchievement("So Be It...Jedi"))) {
+  // win on first guess, unlock Jedi Knight difficulty
+    $("#difficulty-jedi").css("display", "inline-block");
+    addNewAchievement(0, 4, 4);
+  } else if (player.wins >= 1 && !(player.hasAchievement("First Win"))) {
+  // first win
+    addNewAchievement(0, 2, 2);
+  } else if (player.losses >= 1 && !(player.hasAchievement("First Fail"))) {
+  // first loss
+    addNewAchievement(0, 1, 1);
+  } else if (player.losses >= 5 && !(player.hasAchievement("Failsafe"))) {
+  // five losses, unlock Practice Mode difficulty
+    $("#difficulty-practice").css("display", "inline-block");
+    addNewAchievement(0, 3, 3);
+  } else if (player.wins >= 5 && !(player.hasAchievement("Time Travails"))) {
+  // five wins, unlock Time Trial difficulty
+    $("#time-trial-button").css("display", "inline-block");
+    addNewAchievement(0, 5, 5);
+  } else if (player.wins >= 10 && !(player.hasAchievement("Super Star"))) {
+  // ten wins
+    addNewAchievement(0, 6, 6);
+  }
+  $("#achievements-earned-button").css("display", "inline-block");
+  $("#hint-button").removeAttr("disabled");
+  // Show the time elapsed if this was a Time Trial game
+  if (game.timeTrialMode) {
+    var timeTotal = "Your time was: " + (Math.floor((Date.now() - startTime) / 1000)).toString() + " seconds!";
+    var newAlert = new Alert(alerts.type[0], alerts.exclaim[0], timeTotal, "", alerts.hint[0]);
+    newAlert.drawSelf();
+    $("#alerts").children("div").hide().fadeIn();
   }
 }
 
@@ -216,97 +309,5 @@ $(document).ready(function () {
   });
 });
 
-// Player constructor
-function Player(wins, losses, achievements) {
-  this.wins = wins;
-  this.losses = losses;
-  this.achievements = achievements;
-}
-Player.prototype.incrementWins = function () {
-  this.wins += 1;
-};
-Player.prototype.incrementLosses = function () {
-  this.losses += 1;
-};
-Player.prototype.earnAchievement = function (achievement) {
-  this.achievements.push(achievement);
-};
-Player.prototype.hasAchievement = function (achievement) {
-  for (i = 0; i < this.achievements.length; i++ ) {
-    if (this.achievements[i] === achievement) {
-      return true;
-    }
-  }
-  return false;
-};
-
-// Achievement constructor
-function Achievement(type, title, description) {
-  this.type = type;
-  this.title = title;
-  this.description = description;
-}
-Achievement.prototype.drawSelf = function () {
-  $("#achievements").html("");
-  var divEl = document.createElement("div"),
-      spanEl = document.createElement("span"),
-    strongEl = document.createElement("strong"),
-    header = document.createTextNode("   Achievement Unlocked: "),
-    brEl = document.createElement("br"),
-    emEl = document.createElement("em"),
-    title = document.createTextNode(this.title),
-    description = document.createTextNode(this.description);
-  divEl.className = this.type;
-  spanEl.className = "glyphicon glyphicon-ok-sign";
-  divEl.appendChild(spanEl);
-  divEl.appendChild(header);
-  strongEl.appendChild(title);
-  divEl.appendChild(strongEl);
-  divEl.appendChild(brEl);
-  emEl.appendChild(description);
-  divEl.appendChild(emEl);
-  $("#achievements").prepend(divEl);
-  $(".achievement").hide().slideDown(1000).fadeOut(5000);
-};
-function addNewAchievement(x, y, z) {
-  var newAchievement = new Achievement(achievements.type[x], achievements.title[y], achievements.description[y]);
-  player.earnAchievement(newAchievement.title);
-  newAchievement.drawSelf();
-}
-
-// Validate game end and achievements earned
-function validateGameEnd() {
-  if (player.wins >= 1 && game.pastGuesses.length === 0 && !(player.hasAchievement("So Be It...Jedi"))) {
-  // win on first guess, unlock Jedi Knight difficulty
-    $("#difficulty-jedi").css("display", "inline-block");
-    addNewAchievement(0, 4, 4);
-  } else if (player.wins >= 1 && !(player.hasAchievement("First Win"))) {
-  // first win
-    addNewAchievement(0, 2, 2);
-  } else if (player.losses >= 1 && !(player.hasAchievement("First Fail"))) {
-  // first loss
-    addNewAchievement(0, 1, 1);
-  } else if (player.losses >= 5 && !(player.hasAchievement("Failsafe"))) {
-  // five losses, unlock Practice Mode difficulty
-    $("#difficulty-practice").css("display", "inline-block");
-    addNewAchievement(0, 3, 3);
-  } else if (player.wins >= 5 && !(player.hasAchievement("Time Travails"))) {
-  // five wins, unlock Time Trial difficulty
-    $("#time-trial-button").css("display", "inline-block");
-    addNewAchievement(0, 5, 5);
-  } else if (player.wins >= 10 && !(player.hasAchievement("Super Star"))) {
-  // ten wins
-    addNewAchievement(0, 6, 6);
-  }
-  $("#achievements-earned-button").css("display", "inline-block");
-  $("#hint-button").removeAttr("disabled");
-  // Show the time elapsed if this was a Time Trial game
-  if (game.timeTrialMode) {
-    var timeTotal = "Your time was: " + (Math.floor((Date.now() - startTime) / 1000)).toString() + " seconds!";
-    var newAlert = new Alert(alerts.type[0], alerts.exclaim[0], timeTotal, "", alerts.hint[0]);
-    newAlert.drawSelf();
-    $("#alerts").children("div").hide().fadeIn();
-  }
-}
-
+// Instantiate a new player
 player = new Player(0, 0, []);
