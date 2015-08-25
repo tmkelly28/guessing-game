@@ -15,6 +15,8 @@ var achievements = {
   title: ["", "First Fail", "First Win", "Failsafe", "So Be It...Jedi", "Time Travails", "Super Star"],
   description: ["", "There's a first time for everything! Keep trying!", "Alright! Congratulations on your first victory!", "Whoa, buddy! That's five fails! You've unlocked the Practice Mode difficulty - keep at it!", "I've got a bad feeling about this...you got the answer in one guess! You've unlocked the Jedi Knight difficulty!", "That's five victories! You now have access to Time Trial mode!", "Yow - that's ten victories! Great job!"]
 }
+// start time global - for time trial mode
+var startTime;
 
 // Alert object constructor & helper function
 function Alert(type, exclaim, body, guess, hint) {
@@ -51,6 +53,7 @@ function Game(totalGuesses) {
   this.pastGuesses = [];
   this.totalGuesses = totalGuesses;
   this.gameOver = false;
+  this.timeTrialMode = false;
 }
 Game.prototype.makeGuess = function (guess) {
   this.totalGuesses -= 1;
@@ -137,13 +140,26 @@ function validateGuess() {
 $(document).ready(function () {
   // Selecting difficulty
   $("#difficulty-easy").click(function () {
-  startNewGame(14);
+    startNewGame(14);
   });
   $("#difficulty-medium").click(function () {
     startNewGame(7);
   });
   $("#difficulty-hard").click(function () {
     startNewGame(2);
+  });
+  $("#difficulty-practice").click(function () {
+    startNewGame(Infinity);
+  });
+  $("#difficulty-jedi").click(function () {
+    startNewGame(1);
+    $("#hint-button").attr("disabled", "");
+  });
+  // Time Trial Mode
+  $("#time-trial-button").click(function () {
+    startNewGame(Infinity);
+    game.timeTrialMode = true;
+    startTime = Date.now();
   });
   // Use guess button to validate a guess
   $("#submit-guess-button").click(function () {
@@ -267,22 +283,30 @@ function validateGameEnd() {
   } else if (player.wins >= 1 && !(player.hasAchievement("First Win"))) {
   // first win
     addNewAchievement(0, 2, 2);
-  } else if (player.losses === 1 && !(player.hasAchievement("First Fail"))) {
+  } else if (player.losses >= 1 && !(player.hasAchievement("First Fail"))) {
   // first loss
     addNewAchievement(0, 1, 1);
-  } else if (player.losses === 5 && !(player.hasAchievement("Failsafe"))) {
+  } else if (player.losses >= 5 && !(player.hasAchievement("Failsafe"))) {
   // five losses, unlock Practice Mode difficulty
     $("#difficulty-practice").css("display", "inline-block");
     addNewAchievement(0, 3, 3);
-  } else if (player.wins === 5 && !(player.hasAchievement("Time Travails"))) {
+  } else if (player.wins >= 5 && !(player.hasAchievement("Time Travails"))) {
   // five wins, unlock Time Trial difficulty
     $("#time-trial-button").css("display", "inline-block");
     addNewAchievement(0, 5, 5);
-  } else if (player.wins === 10 && !(player.hasAchievement("Super Star"))) {
+  } else if (player.wins >= 10 && !(player.hasAchievement("Super Star"))) {
   // ten wins
     addNewAchievement(0, 6, 6);
   }
   $("#achievements-earned-button").css("display", "inline-block");
+  $("#hint-button").removeAttr("disabled");
+  // Show the time elapsed if this was a Time Trial game
+  if (game.timeTrialMode) {
+    var timeTotal = "Your time was: " + (Math.floor((Date.now() - startTime) / 1000)).toString() + " seconds!";
+    var newAlert = new Alert(alerts.type[0], alerts.exclaim[0], timeTotal, "", alerts.hint[0]);
+    newAlert.drawSelf();
+    $("#alerts").children("div").hide().fadeIn();
+  }
 }
 
 player = new Player(0, 0, []);
