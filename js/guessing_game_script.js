@@ -309,11 +309,21 @@ $(document).ready(function () {
   // Use Achievements Earned button
   $("#achievements-earned-button").click(function () {
     $("#alerts").html("");
+    if (player.achievements.length === 0) {
+      var newAlert = new Alert(alerts.type[1], alerts.exclaim[0], "Nothing yet, chief - try starting a new game!", "", alerts.hint[0]);
+      newAlert.drawSelf();
+      $("#alerts").children("div").hide().fadeIn();
+      return;
+    }
     for (i = 0; i < player.achievements.length; i++) {
       var newAlert = new Alert(alerts.type[0], alerts.exclaim[0], player.achievements[i], "", alerts.hint[0]);
       newAlert.drawSelf();
       $("#alerts").children("div").hide().fadeIn();
     }
+  });
+  // Clear user and password fields when modal closes
+  $(".clear-modal").click(function() {
+    clearUsrPwdField();
   });
 });
 

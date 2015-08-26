@@ -112,6 +112,8 @@ function setUpPlayer(usrInfo) {
   calculateWinLoss();
   savePlayer();
   saveLocalStorage();
+  resetGameState();
+  clearUsrPwdField();
 }
 
 // Set wins and losses in the navbar
@@ -120,7 +122,7 @@ function calculateWinLoss() {
   $("#loss-count").html(player.losses);
 }
 
-// store user data when the page is closed
+// add user data to storage global
 function savePlayer() {
   // if using the default player, do not store anything
   if (player.usrname === undefined) {
@@ -140,6 +142,20 @@ function savePlayer() {
   }
 }
 
+// store user data to local storage
 function saveLocalStorage() {
   localStorage.setItem("storage", JSON.stringify(storage));
+}
+
+// "resets" the current game
+function resetGameState() {
+  $("#alerts").html("");
+  $("#guesses-remaining").html("--");
+  $("#submit-guess-input").val("");
+  $("#submit-guess-input").attr("disabled", "");
+}
+
+// clear the name and password modal fields
+function clearUsrPwdField() {
+  $(".usrpwd").val("");
 }
