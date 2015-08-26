@@ -94,9 +94,12 @@ Game.prototype.makeGuess = function (guess) {
   $("#submit-guess-input").val("");
 };
 Game.prototype.giveHint = function (guess) {
+  // Used for building an alert in the alerts well
   if (guess > this.target) {
+    // 2 is the index for the message to guess lower next time
     return 2;
   } else {
+    // 1 is the index for the message to guess higher next time
     return 1;
   }
 };
@@ -196,7 +199,7 @@ function validateGuess() {
   }
 }
 
-// Validate game end and achievements earned
+// Validate game end/achievements earned, saves player state
 function validateGameEnd() {
   calculateWinLoss();
   if (player.wins >= 1 && game.pastGuesses.length === 0 && !(player.hasAchievement("So Be It...Jedi"))) {
@@ -230,6 +233,8 @@ function validateGameEnd() {
     newAlert.drawSelf();
     $("#alerts").children("div").hide().fadeIn();
   }
+  savePlayer();
+  saveLocalStorage();
 }
 
 // DOM Events

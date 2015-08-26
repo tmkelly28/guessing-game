@@ -81,13 +81,12 @@ function validateLogin(usr, pwd) {
     if (storage.users[i].usrname === usr && storage.users[i].pwd === pwd) {
       $("#prev-login").attr("data-dismiss", "modal");
       return [storage.users[i].usrname, storage.users[i].pwd, storage.users[i].wins, storage.users[i].losses, storage.users[i].achievements];
-    } else {
-      // reject - does not match records
-      $("#error-info-login").html("The credentials entered did not match our records. Please check your spelling!");
-      $("#prev-login").attr("data-dismiss", "")
-      return "error";
     }
   }
+  // reject - does not match records
+  $("#error-info-login").html("The credentials entered did not match our records. Please check your spelling!");
+  $("#prev-login").attr("data-dismiss", "")
+  return "error";
 }
 
 // Set up the player
@@ -111,6 +110,8 @@ function setUpPlayer(usrInfo) {
     $("#difficulty-jedi").css("display", "none");
   }
   calculateWinLoss();
+  savePlayer();
+  saveLocalStorage();
 }
 
 // Set wins and losses in the navbar
@@ -120,23 +121,25 @@ function calculateWinLoss() {
 }
 
 // store user data when the page is closed
-$(window).bind("beforeunload", function() {
+function savePlayer() {
   // if using the default player, do not store anything
   if (player.usrname === undefined) {
     return;
   } else {
-    // if using a previous player, save that player to the storage object
+    // if using a previous player, save that player to the storage object    
     for (i = 0; i < storage.users.length; i++) {
       if (storage.users[i].usrname === player.usrname) {
           storage.users[i].wins = player.wins;
           storage.users[i].losses = player.losses;
           storage.users[i].achievements = player.achievements;
-      } else {
-        // push the new player to the storage object
-        storage.users.push(player);
+          return;
       }
     }
-    // store the storage object as JSON-string
-    return localStorage.setItem("storage", JSON.stringify(storage));
+    // push the new player to the storage object
+    storage.users.push(player);
   }
-});
+}
+
+function saveLocalStorage() {
+  localStorage.setItem("storage", JSON.stringify(storage));
+}
