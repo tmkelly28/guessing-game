@@ -296,8 +296,12 @@ $(document).ready(function () {
   $(".make-alerts").click(function () {
     // alert slidedown
     $($("#alerts").children("div")[0]).hide().slideDown();
+    // prevent error if no game has been started since opening the browser
+    if (game === undefined) {
+      return;
+    }
+    // special animation at game over
     if (game.gameOver) {
-      // special animation at game over
       $($("#alerts").children("div")[0]).animate({
         fontSize: "15"
       }, 1000);
