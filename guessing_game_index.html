@@ -59,11 +59,11 @@
       <form class="form-horizontal" role="form" id="guess-form">
         <div class="form-group">
           <label>Your guess:</label>
-          <input type="text" class="form-control" id="submit-guess-input" disabled>
+          <input type="text" class="form-control" id="submit-guess-input" autocomplete="off" disabled>
         </div>
         <div class="form-group">
-          <a href="#" class="btn btn-primary make-alerts" role="button" id="submit-guess-button">Guess</a>
-          <a href="#" class="btn btn-primary make-alerts" role="button" id="hint-button">Hint, Please!</a>
+          <a href="#" class="btn btn-primary" role="button" id="submit-guess-button">Guess</a>
+          <a href="#" class="btn btn-primary" role="button" id="hint-button">Hint, Please!</a>
         </div>
       </form>
     </div>
@@ -146,17 +146,20 @@
           <label for="pwd">Password:</label>
           <input type="password" class="form-control usrpwd" id="new-pwd">
         </div>
+        <p id="error-info-signup" class="login-error"></p>
       </div>     
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" id="new-signup">Sign Up</button>
         <button type="button" class="btn btn-default clear-modal" data-dismiss="modal">Cancel</button>
       </div>
-      <p id="error-info-signup" class="login-error"></p>
     </div>
   </div>
 </div>
   
 </body>
-  <script src="js/guessing_game_script.js"></script>
-  <script src="js/guessing_game_login.js"></script>
+  <script src="js/globals.js"></script>
+  <script src="js/dom_manipulators.js"></script>
+  <script src="js/functions.js"></script>
+  <script src="js/constructors.js"></script>
+  <script src="js/event_handlers.js"></script>
 </html>
